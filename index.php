@@ -2,20 +2,30 @@
 
 require_once "./vendor/autoload.php";
 
+header('Content-Type: text/html');
+
+echo '<!DOCTYPE>
+      <html>  
+      <head>
+
+      </head>
+
+      <body>
+        <div>
+';
+
+
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Label\Label;
-use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\ValidationException;
 
 $writer = new PngWriter();
 
 // Create QR code
-$qrCode = QrCode::create('+43 1 22 33 444')
+$qrCode = QrCode::create('tel:' . $_GET['input'])
     ->setEncoding(new Encoding('UTF-8'))
     ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
     ->setSize(300)
@@ -24,25 +34,21 @@ $qrCode = QrCode::create('+43 1 22 33 444')
     ->setForegroundColor(new Color(0, 0, 0))
     ->setBackgroundColor(new Color(255, 255, 255));
 
-// Create generic logo
-$logo = Logo::create(__DIR__ . '/src/rick.jpeg')
-    ->setResizeToWidth(50)
-    ->setPunchoutBackground(true)
-;
-
-// Create generic label
-$label = Label::create('Rickroll')
-    ->setTextColor(new Color(255, 0, 0));
-
-
-$result = $writer->write($qrCode, $logo, $label);
-
-
-header('Content-Type: ' . $result->getMimeType());
-echo $result->getString();
+$result = $writer->write($qrCode);
 
 // Save it to a file
 $result->saveToFile(__DIR__ . '/src/qrcode.png');
 
-// Generate a data URI to include image data inline (i.e. inside an <img> tag)
-$dataUri = $result->getDataUri();
+echo '<img src="./src/qrcode.png" />
+
+      <form name="form" action="" method="get">
+                <input type="text" name="input" id="input" />
+                <button type="submit">submit</button>
+            </form>
+        </div>
+      </body>
+
+      </html>
+';
+
+
