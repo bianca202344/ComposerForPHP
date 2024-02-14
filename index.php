@@ -7,8 +7,13 @@ header('Content-Type: text/html');
 echo '<!DOCTYPE>
       <html>  
       <head>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
+
+      <script>
+        
+
+      </script>
 
       <body>
         <div>
@@ -23,6 +28,10 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
 $writer = new PngWriter();
+
+if (!isset($_GET['input'])) {
+  $_GET['input'] = 'no input yet';
+}
 
 // Create QR code
 $qrCode = QrCode::create('tel:' . $_GET['input'])
